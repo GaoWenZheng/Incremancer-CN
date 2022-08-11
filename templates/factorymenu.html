@@ -1,0 +1,87 @@
+<div class="shop" ng-if="zm.sidePanels.factory">
+    <div class="shop-title">
+        <h2>工厂</h2>
+        <button ng-click="zm.closeSidePanels();">关闭</button>
+    </div>
+    <div class="tabs">
+        <button ng-click="zm.factory.changeFactoryTab('parts');" class="parts {{zm.factoryTab == 'parts' ? 'active' : ''}}">部件</button>
+        <button ng-click="zm.factory.changeFactoryTab('creatures');" class="blood {{zm.factoryTab == 'creatures' ? 'active' : ''}}" ng-if="zm.model.constructions.monsterFactory">生物</button>
+        <button ng-click="zm.factory.changeFactoryTab('level');" class="blood {{zm.factoryTab == 'level' ? 'active' : ''}}" ng-if="zm.model.constructions.monsterFactory">升级</button>
+    </div>
+    <p ng-if="zm.factoryTab == 'parts'">你当前拥有 {{zm.factoryStats.machines}} 台机器,平均能生产 {{zm.factoryStats.partsPerSec * zm.model.gameSpeed|whole}} 生物部件每秒.</p>
+    <div class="upgrades" ng-if="zm.factoryTab == 'parts'">
+        <div ng-repeat="generator in zm.upgrades" class="upgrade {{generator.costType}}">
+            <h4>{{generator.name}} ({{zm.currentRank(generator)}})</h4>
+            <h4 class="cost">{{zm.factory.generatorPrice(generator)|whole}} {{generator.costType}}</h4>
+            <div class="generator-progress clear {{zm.currentRank(generator) > 0 ? 'active' : ''}}">
+                <span class="percent" ng-style="{'animation-duration':(generator.time / zm.model.gameSpeed) + 's'}"></span>
+            </div>
+            <button ng-click="zm.factory.buyGenerator(generator);" ng-disabled="zm.upgradeTooExpensive(generator);">{{zm.upgradeButtonText(generator)}}
+        <span class="percent" ng-style="{'width':zm.upgradePercent(generator) + '%'}"></span>
+      </button>
+            <button ng-click="generator.selected = !generator.selected" class="info  {{generator.selected ? 'active' : ''}}">i</button>
+            <div class="clear"></div>
+            <p ng-show="generator.selected">{{generator.description}}</p>
+            <p ng-show="generator.selected">已拥有: {{zm.currentRank(generator)}} - 产出 {{zm.currentRank(generator) * generator.produces|decimal}} 部件每 {{generator.time}} 秒</p>
+        </div>
+    </div>
+    <p ng-if="zm.factoryTab == 'creatures'">你当前拥有 {{zm.model.creatureCount}} 生物,同时上限为 {{zm.model.creatureLimit}}.</p>
+    <p ng-if="zm.factoryTab == 'creatures'">生物可以自动建造,直到它们达到你设定的限制.</p>
+    <div class="upgrades" ng-if="zm.factoryTab == 'creatures'">
+        <div ng-repeat="creature in zm.upgrades" class="upgrade parts">
+            <h4>{{creature.name}} 等级:{{creature.level}}</h4>
+            <h4 class="cost">{{zm.factory.creaturePrice(creature)|whole}} 部件</h4>
+            <div class="clear"></div>
+            <button ng-click="zm.factory.buyCreature(creature);" ng-disabled="!zm.factory.canBuildCreature(creature)">{{zm.factory.creatureButtonText(creature)}}
+        <span class="percent" ng-style="{'width':zm.factory.creaturePercent(creature) + '%'}"></span>
+      </button>
+            <button ng-click="creature.selected = !creature.selected" class="info  {{creature.selected ? 'active' : ''}}">i</button>
+            <p ng-show="creature.selected">{{creature.description}}</p>
+            <div class="clear" style="margin-top:5px;">
+                <button ng-click="zm.factory.autoBuild(creature, -1)">-</button><span style="padding:0 10px;">自动建造 {{creature.autobuild}}</span><button ng-click="zm.factory.autoBuild(creature, 1)">+</button>
+            </div>
+        </div>
+    </div>
+    <p ng-if="zm.factoryTab == 'level'">每次你升级一个生物,它的生命值和伤害将增加75%,但花费将增加100%.确保你能负担得起,因为这个操作无法撤销.</p>
+    <div class="upgrades" ng-if="zm.factoryTab == 'level'">
+        <div ng-repeat="creature in zm.upgrades" class="upgrade parts">
+            <h4>{{creature.name}} 等级:{{creature.level}}</h4>
+            <h4 class="cost">{{zm.factory.creatureLevelPrice(creature)|whole}} 部件</h4>
+            <div class="clear"></div>
+            <button ng-click="zm.factory.levelCreature(creature);" ng-disabled="!zm.factory.canLevelCreature(creature)">{{zm.factory.creatureLevelButtonText(creature)}}
+        <span class="percent" ng-style="{'width':zm.factory.creatureLevelPercent(creature) + '%'}"></span>
+      </button>
+            <button ng-click="creature.selected = !creature.selected" class="info  {{creature.selected ? 'active' : ''}}">i</button>
+            <table style="width:100%;margin-top:5px;text-align: left;" ng-show="creature.selected">
+                <tr>
+                    <th colspan="2">当前等级: {{creature.level}}</th>
+                    <th colspan="2">下个等级: {{creature.level+1}}</th>
+                </tr>
+                <tr>
+                    <th>生命值</th>
+                    <td>{{zm.factory.creatureStats(creature).thisLevel.health|decimal}}</td>
+                    <th>生命值</th>
+                    <td>{{zm.factory.creatureStats(creature).nextLevel.health|decimal}}</td>
+                </tr>
+                <tr>
+                    <th>伤害</th>
+                    <td>{{zm.factory.creatureStats(creature).thisLevel.damage|decimal}}</td>
+                    <th>伤害</th>
+                    <td>{{zm.factory.creatureStats(creature).nextLevel.damage|decimal}}</td>
+                </tr>
+                <tr>
+                    <th>速度</th>
+                    <td>{{creature.speed}}</td>
+                    <th>速度</th>
+                    <td>{{creature.speed}}</td>
+                </tr>
+                <tr>
+                    <th>花费</th>
+                    <td>{{zm.factory.creatureStats(creature).thisLevel.cost|decimal}}</td>
+                    <th>花费</th>
+                    <td>{{zm.factory.creatureStats(creature).nextLevel.cost|decimal}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

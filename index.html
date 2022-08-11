@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="zombieApp">
+
+<head>
+    <title>亡灵增量</title>
+    <meta name="description" content="Zombie necromancer idle game">
+    <meta name="keywords" content="zombie,game,idle,javascript">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#104510" />
+    <meta charset="utf-8" />
+    <!-- <link rel="manifest" href="manifest.json"> -->
+    <script src='https://download.playfab.com/PlayFabClientApi.js'></script>
+    <!--script src='https://www.kongregate.com/javascripts/kongregate_api.js'></script-->
+    <script src="js/lz-string.min.js"></script>
+    <script src="js/pixi-legacy.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/utilsfunctions.js"></script>
+    <script src="js/zombiemancer.js"></script>
+    <script src="js/spells.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/partfactory.js"></script>
+    <script src="js/creaturefactory.js"></script>
+    <script src="js/gamemodel.js"></script>
+    <script src="js/upgrades.js"></script>
+    <script src="js/trophies.js"></script>
+    <script src="js/humans.js"></script>
+    <script src="js/zombies.js"></script>
+    <script src="js/creatures.js"></script>
+    <script src="js/graveyard.js"></script>
+    <script src="js/bloodparts.js"></script>
+    <script src="js/angularzombie.js"></script>
+
+    <!-- <script src="js/zombie.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="zombiemancer.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+
+<body ng-controller="ZombieController as zm">
+    <script src="js/cnkey.js"></script>
+    <script src="js/transcore.js"></script>
+    <div class="message" ng-if="zm.message">
+        <p>{{zm.message}}</p>
+    </div>
+
+    <div class="stats {{zm.model.persistentData.zoomButtons ? 'zoom' : ''}}">
+        <label>关卡: {{zm.model.level}}</label>
+        <button ng-click="zm.showStats = !zm.showStats" class="{{zm.showStats ? 'active' : ''}}">统计</button>
+        <label>人类: {{zm.model.getHumanCount()}}</label>
+        <label>僵尸: {{zm.model.zombieCount}}</label>
+        <label ng-if="zm.model.constructions.monsterFactory">生物: {{zm.model.creatureCount}} / {{zm.model.creatureLimit}}</label>
+        <label ng-if="zm.model.persistentData.showfps">帧率: {{zm.model.frameRate}}</label>
+    </div>
+
+    <div class="resources">
+        <label class="energy">能量:<span class="value">{{zm.model.energy|decimal}} / {{zm.model.energyMax|whole}}</span><span class="percent" ng-style="{'width':zm.energyPercent() + '%'}"></span></label>
+        <label class="blood">血液:<span class="value">{{zm.model.persistentData.blood|whole}} / {{zm.model.bloodMax|whole}}</span><span class="percent" ng-style="{'width':zm.bloodPercent() + '%'}"></span></label>
+        <label class="brains">大脑:<span class="value">{{zm.model.persistentData.brains|whole}} / {{zm.model.brainsMax|whole}}</span><span class="percent" ng-style="{'width':zm.brainsPercent() + '%'}"></span></label>
+        <label class="bones" ng-if="zm.model.constructions.graveyard || zm.model.persistentData.bones > 0">骨骼:<span class="value">{{zm.model.persistentData.bones|whole}}</span></label>
+        <label class="parts" ng-if="zm.model.constructions.factory || zm.model.persistentData.parts > 0">部件:<span class="value">{{zm.model.persistentData.parts|whole}}</span></label>
+        <div class="spells">
+            <button ng-repeat="spell in zm.spells.getUnlockedSpells()" ng-click="zm.spells.castSpell(spell)" class="spell {{spell.active ? 'active' : (spell.onCooldown ? 'cooldown' : '')}}" ng-disabled="spell.onCooldown || spell.energyCost > zm.model.energy">
+          <span class="icon">{{spell.name}}</span>
+          <span class="timer" ng-if="spell.active || spell.onCooldown">{{spell.active ? spell.timer : spell.cooldownLeft|whole}}</span>
+          <span class="tooltip" ng-if="!spell.active && !spell.onCooldown">{{spell.tooltip}}</span>
+        </button>
+        </div>
+    </div>
+
+    <div class="buttons {{zm.sidePanels.open ? 'open' : ''}}">
+        <button ng-click="zm.openSidePanel('shop');" class="{{zm.sidePanels.shop ? 'active' : ''}}">商店</button>
+        <button ng-click="zm.openSidePanel('construction');" ng-if="zm.model.construction" class="{{zm.sidePanels.construction ? 'active' : ''}}"><span ng-if="zm.model.persistentData.currentConstruction" class="tag">{{zm.constructionPercent()}}%</span>建筑物</button>
+        <button ng-click="zm.openSidePanel('graveyard');" ng-if="zm.model.constructions.graveyard" class="{{zm.sidePanels.graveyard ? 'active' : ''}}">墓地</button>
+        <button ng-click="zm.openSidePanel('factory');" ng-if="zm.model.constructions.factory" class="{{zm.sidePanels.factory ? 'active' : ''}}">工厂</button>
+        <button ng-click="zm.openSidePanel('runesmith');" ng-if="zm.model.constructions.runesmith" class="{{zm.sidePanels.runesmith ? 'active' : ''}}">符文铁匠</button>
+        <button ng-click="zm.openSidePanel('prestige');" ng-if="zm.isShowPrestige()" class="{{zm.sidePanels.prestige ? 'active' : ''}}">重生</button>
+        <button ng-click="zm.openSidePanel('options');" class="{{zm.sidePanels.options ? 'active' : ''}}">选项</button>
+        <button ng-click="zm.levelSelect.show()" class="{{zm.levelSelect.shown ? 'active' : ''}}" ng-if="zm.levelSelect.showButton()">关卡选择</button>
+    </div>
+
+    <div class="zoom-buttons" ng-if="zm.model.persistentData.zoomButtons">
+        <button ng-click="zm.zoom(-1);">-</button>
+        <button ng-click="zm.resetZoom();">重置</button>
+        <button ng-click="zm.zoom(+1);">+</button>
+    </div>
+
+    <level-select></level-select>
+    <prestige-menu></prestige-menu>
+    <shop-menu></shop-menu>
+    <construction-menu></construction-menu>
+    <graveyard-menu></graveyard-menu>
+    <runesmith-menu></runesmith-menu>
+    <factory-menu></factory-menu>
+    <options-menu></options-menu>
+    <level-stats></level-stats>
+
+    <div class="start-game" ng-if="zm.model.currentState == zm.model.states.startGame">
+        <h2>亡灵增量</h2>
+        <h4>控制一群僵尸蹂躏小镇</h4>
+        <ul>
+            <li ng-repeat="text in zm.howToPlay">{{text}}</li>
+        </ul>
+        <h2 ng-if="zm.model.offlineMessage">{{zm.model.offlineMessage}}</h2>
+        <button ng-click="zm.startGame();">开始关卡 {{zm.model.level}}</button>
+    </div>
+
+    <div class="end-level" ng-if="zm.model.currentState == zm.model.states.failed">
+        <h2>关卡 {{zm.model.level}} 失败</h2>
+        <h4>你被打败了</h4>
+        <button ng-click="zm.model.startLevel(zm.model.level - 1);">返回到关卡 {{zm.model.level - 1}}</button>
+        <button ng-click="zm.model.startLevel(zm.model.level);">重玩关卡 {{zm.model.level}}</button>
+    </div>
+
+    <div class="end-level" ng-if="zm.model.currentState == zm.model.states.levelCompleted">
+        <h2>关卡 {{zm.model.level}} 完成</h2>
+        <h4>所有的人类不是死了就是加入了不死族大家庭!</h4>
+        <h4 ng-if="zm.model.prestigePointsEarned > 0">你获得了 {{zm.model.prestigePointsEarned}} 重生点数</h4>
+        <h4 ng-if="zm.model.endLevelBones">你的骨骼收集者扫清了小镇中残余的 {{zm.model.endLevelBones}} 骨骼</h4>
+        <button ng-click="zm.nextLevel();">开始关卡 {{zm.model.level + 1}}</button>
+    </div>
+
+    <div class="start-game" ng-if="zm.model.currentState == zm.model.states.prestiged">
+        <h2>你重生了!</h2>
+        <p>是时候重新开始了,但这次你会变得更强更快.</p>
+        <h4>你拥有 {{zm.model.persistentData.prestigePointsToSpend}} 重生点数可以使用</h4>
+        <p>建议您在点击开始游戏前使用您的点数</p>
+        <p>因为一些效果只有在新的关卡开始时才会被激活.</p>
+        <button ng-click="zm.startGame();">开始关卡 {{zm.model.level}}</button>
+    </div>
+</body>
+
+</html>

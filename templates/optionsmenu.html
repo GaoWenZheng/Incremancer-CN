@@ -1,0 +1,73 @@
+<div class="shop" ng-if="zm.sidePanels.options">
+    <div class="shop-title">
+        <h2>选项</h2>
+        <button ng-click="zm.closeSidePanels();">关闭</button>
+    </div>
+    <div class="upgrades">
+        <div class="upgrade">
+            <h4>游戏指南</h4>
+            <ul>
+                <li ng-repeat="text in zm.howToPlay">{{text}}</li>
+            </ul>
+        </div>
+        <div class="upgrade">
+            <h4>自动开始下个关卡</h4>
+            <p>在 3 秒后自动开始下个关卡.如果你想玩简单的放置游戏.</p>
+            <button ng-click="zm.toggleAutoStart();">{{zm.model.persistentData.autoStart ? "开" : "关"}}</button>
+        </div>
+        <div class="upgrade">
+            <h4>渲染分辨率</h4>
+            <p>选择你喜欢的分辨率来渲染游戏.</p>
+            <p>50% 可以在老旧的硬件上运行顺畅,但可能看起来模糊.</p>
+            <p>100% 将会匹配你的浏览器默认的像素分辨率.</p>
+            <p>200% 是浏览器默认值的两倍,在视网膜显示屏设备或手机上显示效果会更好.</p>
+            <button ng-click="zm.toggleResolution(0.5);" class="{{zm.getResolution() == 0.5 ? 'active' : ''}}">50%</button>
+            <button ng-click="zm.toggleResolution(1);" class="{{zm.getResolution() == 1 ? 'active' : ''}}">100%</button>
+            <button ng-click="zm.toggleResolution(2);" class="{{zm.getResolution() == 2 ? 'active' : ''}}">200%</button>
+        </div>
+        <div class="upgrade" ng-if="zm.model.deferredPrompt">
+            <h4>添加到主屏幕</h4>
+            <p>你可以把这个游戏添加到你的智能手机主屏幕上,但不需要安装任何东西.</p>
+            <button ng-click="zm.addToHomeScreen();">添加到主屏幕</button>
+        </div>
+        <div class="upgrade" ng-if="!zm.model.kongregate">
+            <h4>切换全屏</h4>
+            <p>切换全屏模式.在小屏幕设备上可能比较有用.</p>
+            <button ng-click="zm.model.toggleFullscreen();">切换全屏</button>
+        </div>
+        <div class="upgrade">
+            <h4>显示缩放按钮</h4>
+            <p>如果你没办法用其他方法进行缩放,你可以通过这个将缩放按钮添加到界面上.</p>
+            <button ng-click="zm.toggleZoomButtons();">{{zm.model.persistentData.zoomButtons ? "开" : "关"}}</button>
+        </div>
+        <div class="upgrade">
+            <h4>显示帧速率计数器</h4>
+            <p>用于性能测试</p>
+            <button ng-click="zm.toggleShowFps();">{{zm.model.persistentData.showfps ? "开" : "关"}}</button>
+        </div>
+        <div class="upgrade">
+            <h4>管理存档</h4>
+            <p>导入或导出游戏存档</p>
+            <label class="blood">注意:导入存档将会覆盖你当前的进度</label>
+            <a ng-if="zm.model.encodedContent" href="{{zm.model.encodedContent}}" download="{{zm.model.savefilename}}" class="button">
+          <button>下载存档文件</button>
+        </a>
+            <button onclick="document.getElementById('import-file').click();">导入存档</button>
+            <input type="file" id="import-file" name="import-file" enctype="multipart/form-data" hidden onchange="GameModel.importFile();" />
+            <button ng-click="zm.model.loadFromPlayFab(true)" ng-if="zm.model.playFabId" class="mt-5" ng-disabled="!zm.model.allowPlayFabAction()">从云端载入</button>
+            <button ng-click="zm.model.saveToPlayFab()" ng-if="zm.model.playFabId" class="mt-5" ng-disabled="!zm.model.allowPlayFabAction()">保存到云端</button>
+        </div>
+        <div class="upgrade">
+            <h4>游戏控制</h4>
+            <p>游戏速度：{{zm.model.gameSpeed}}</p>
+            <button ng-click="zm.model.gameSpeed=zm.model.gameSpeed+1">速度+</button>
+            <button ng-click="zm.model.gameSpeed=zm.model.gameSpeed-1;">速度-</button>
+            <button ng-click="zm.model.gameSpeed=1;">重置速度</button>
+        </div>
+        <div class="upgrade">
+            <h4>重置游戏</h4>
+            <p>这将重置所有的存档,如果你想彻底重新开始的话.</p>
+            <button ng-click="zm.resetGame();">重置游戏</button>
+        </div>
+    </div>
+</div>

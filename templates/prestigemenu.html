@@ -1,0 +1,24 @@
+<div class="shop" ng-if="zm.sidePanels.prestige">
+    <div class="shop-title">
+        <h2>重生菜单</h2>
+        <button ng-click="zm.closeSidePanels()">关闭</button>
+    </div>
+    <h3>现在重生可以解锁 {{zm.model.persistentData.prestigePointsEarned|whole}} 重生点数</h3>
+    <p class="prestige-info">这将重置你的游戏进度但可以给你大量的重生点数以使用.</p>
+    <button ng-click="zm.doPrestige();" ng-disabled="zm.model.persistentData.prestigePointsEarned <= 0">立即重生</button>
+    <p class="prestige-info">你当前拥有 <strong>{{zm.model.persistentData.prestigePointsToSpend|whole}}</strong> 重生点数可以使用</p>
+    <div class="upgrades">
+        <div ng-repeat="upgrade in zm.upgrades" class="upgrade bones">
+            <h4>{{upgrade.name}}</h4>
+            <h4 class="cost">花费: {{zm.upgradePrice(upgrade)|whole}} 点</h4>
+            <label>{{zm.upgradeSubtitle(upgrade)}}</label>
+            <button ng-click="zm.buyUpgrade(upgrade);" ng-disabled="zm.upgradeTooExpensive(upgrade);">
+        {{upgrade.cap != 0 && zm.currentRank(upgrade) >= upgrade.cap ? '售罄' : zm.upgradeTooExpensive(upgrade) ? zm.requiredForUpgrade(upgrade) : zm.purchaseText(upgrade)}}
+        <span class="percent" ng-style="{'width':zm.upgradePercent(upgrade) + '%'}"></span>
+      </button>
+            <button ng-click="upgrade.selected = !upgrade.selected" class="info  {{upgrade.selected ? 'active' : ''}}">信息</button>
+            <p ng-show="upgrade.selected">{{upgrade.description}}</p>
+            <p ng-show="upgrade.selected">当前等阶: {{zm.currentRank(upgrade)}}{{upgrade.cap != 0 ? ' / ' + upgrade.cap : ''}} - {{zm.upgradeStatInfo(upgrade)}}</p>
+        </div>
+    </div>
+</div>

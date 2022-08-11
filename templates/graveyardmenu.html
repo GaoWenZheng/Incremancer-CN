@@ -1,0 +1,64 @@
+<div class="shop" ng-if="zm.sidePanels.graveyard">
+    <div class="shop-title">
+        <h2>被诅咒的墓地</h2>
+        <button ng-click="zm.closeSidePanels();">关闭</button>
+    </div>
+    <div class="tabs">
+        <button ng-click="zm.graveyardTabSelect('minions')" class="{{zm.graveyardTab == 'minions' ? 'active' : ''}}">奴隶</button>
+        <button ng-click="zm.graveyardTabSelect('trophies')" class="{{zm.graveyardTab == 'trophies' ? 'active' : ''}}">战利品</button>
+    </div>
+    <div class="upgrades" ng-if="zm.graveyardTab == 'minions'">
+        <div class="bone-collectors bones">
+            <h4>骨骼收集者 <button ng-click="zm.bcinfo = !zm.bcinfo" class="{{zm.bcinfo ? 'active' : ''}}">信息</button></h4>
+            <p ng-show="zm.bcinfo">雇佣骨骼收集者来收集小镇上的死者和倒下的僵尸散落的骨骼.每个骨骼收集者每秒消耗 1 点能量.它们是饥饿的小生物.不停地四处乱跑.</p>
+            <h4>能量增率: {{zm.model.getEnergyRate()|decimal}} 每秒</h4>
+            <button ng-click="zm.subtractBoneCollector();">-</button><label>{{zm.model.persistentData.boneCollectors|whole}} 个骨骼收集者</label><button ng-click="zm.addBoneCollector();">+</button>
+        </div>
+        <div class="bone-collectors bones">
+            <h4>召唤僵尸 <button ng-click="zm.zsinfo = !zm.zsinfo" class="{{zm.zsinfo ? 'active' : ''}}">信息</button></h4>
+            <p ng-show="zm.zsinfo">每当你的能量满额时在你的墓地召唤一定数量的僵尸.每次召唤的最大数量受你的能量上限限制.</p>
+            <div class="clear">
+                <button ng-click="zm.setGraveyardZombies(0);">0</button>
+                <button ng-click="zm.setGraveyardZombies(zm.model.persistentData.graveyardZombies - 1);">-</button>
+                <label>{{zm.model.persistentData.graveyardZombies|whole}} 个僵尸</label>
+                <button ng-click="zm.setGraveyardZombies(zm.model.persistentData.graveyardZombies + 1);">+</button>
+                <button ng-click="zm.setGraveyardZombies(zm.maxGraveyardZombies());">{{zm.maxGraveyardZombies()}}</button>
+            </div>
+        </div>
+        <div class="bone-collectors bones" ng-if="zm.model.zombieCages > 0">
+            <h4>笼中僵尸 <button ng-click="zm.czinfo = ! zm.czinfo" class="{{zm.czinfo ? 'active' : ''}}">信息</button></h4>
+            <div class="clear cages">
+                <h4>你当前拥有 {{zm.model.zombiesInCages}} / {{zm.model.zombieCages}} 个僵尸在笼子里</h4>
+                <p ng-show="zm.czinfo">你可以将它们释放继续参加战斗,也可以献祭它们来换取 {{zm.model.cagedZombieSacrificeValue().blood|whole}} 血液, {{zm.model.cagedZombieSacrificeValue().brains}} 大脑,和 {{zm.model.cagedZombieSacrificeValue().bones}} 骨骼</p>
+                <button ng-click="zm.model.releaseCagedZombies()" ng-disabled="zm.model.zombiesInCages == 0 || zm.model.currentState != zm.model.states.playingLevel">释放</button>
+                <button ng-click="zm.model.persistentData.autoRelease = !zm.model.persistentData.autoRelease" class="{{zm.model.persistentData.autoRelease ? 'active' : ''}}">自动释放</button>
+                <button ng-click="zm.model.sacrificeCagedZombies()" ng-disabled="zm.model.zombiesInCages == 0">献祭</button>
+            </div>
+        </div>
+        <div class="bone-collectors bones" ng-if="zm.model.constructions.aviary">
+            <h4>鸟身女妖 <button ng-click="zm.hpinfo = ! zm.hpinfo" class="{{zm.hpinfo ? 'active' : ''}}">信息</button></h4>
+            <p ng-show="zm.hpinfo">释放鸟身女妖,将被瘟疫感染的僵尸肉扔向毫无戒心的人类.每个鸟身女妖每秒消耗 1 点能量.</p>
+            <h4>能量增率: {{zm.model.getEnergyRate()|decimal}} 每秒</h4>
+            <button ng-click="zm.setHarpies(zm.model.persistentData.harpies - 1);">-</button><label>{{zm.model.persistentData.harpies|whole}} 个鸟身女妖</label><button ng-click="zm.setHarpies(zm.model.persistentData.harpies + 1);">+</button>
+        </div>
+        <div class="bone-collectors bones" ng-if="zm.model.gigazombies">
+            <h4>巨型僵尸 <button ng-click="zm.gzinfo = ! zm.gzinfo" class="{{zm.gzinfo ? 'active' : ''}}">信息</button></h4>
+            <p ng-show="zm.gzinfo">将已召唤出的僵尸使用能量变成巨型僵尸.这可以将它们的生命值和伤害提升 10x,但能量消耗也提升 5x.</p>
+            <h4>每个僵尸能量消耗 {{zm.model.zombieCost}}</h4>
+            <button ng-click="zm.model.toggleGigazombies();" class="{{zm.model.persistentData.gigazombiesOn ? 'active' : ''}}">{{zm.model.persistentData.gigazombiesOn ? '巨型僵尸 开' : '巨型僵尸 关'}}</button>
+        </div>
+    </div>
+    <p ng-if="zm.graveyardTab == 'trophies'">通过收集某些城镇里重要人物的头颅来获得奖励.这些战利品在重生时不会被重置,同时逃脱的重要人物会回到城镇里.</p>
+    <div class="tabs" ng-if="zm.graveyardTab == 'trophies'">
+        <button ng-click="zm.trophyTabSelect('all')" class="{{zm.trophyTab == 'all' ? 'active' : ''}}">所有</button>
+        <button ng-click="zm.trophyTabSelect('collected')" class="{{zm.trophyTab == 'collected' ? 'active' : ''}}">已收集</button>
+        <button ng-click="zm.trophyTabSelect('uncollected')" class="{{zm.trophyTab == 'uncollected' ? 'active' : ''}}">未收集</button>
+        <button ng-click="zm.trophyTabSelect('totals')" class="{{zm.trophyTab == 'totals' ? 'active' : ''}}">数据汇总</button>
+    </div>
+    <div class="upgrades" ng-if="zm.graveyardTab == 'trophies'">
+        <div ng-repeat="trophy in zm.trophies" class="upgrade bones {{trophy.owned ? 'owned' : 'uncollected'}}">
+            <label ng-if="zm.trophyTab != 'totals'">关卡: {{trophy.level}}<span ng-if="trophy.escaped" class="escaped">重要人物已逃脱</span></label>
+            <label>{{zm.upgradeSubtitle(trophy)}}</label>
+        </div>
+    </div>
+</div>

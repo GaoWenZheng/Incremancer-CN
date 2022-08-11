@@ -1,0 +1,79 @@
+<div class="shop" ng-if="zm.sidePanels.runesmith">
+    <div class="shop-title">
+        <h2>符文铁匠</h2>
+        <button ng-click="zm.closeSidePanels();">关闭</button>
+    </div>
+    <p>符文铁匠用象征生命和死亡的魔法符号为你的僵尸附魔.这些符文可以被注入资源来提升它们的威力.</p>
+    <div class="tabs">
+        <strong>总计: </strong>
+        <button ng-click="zm.infusionAmount = 1000;zm.infusionMax = false" class="{{zm.infusionMax != true && zm.infusionAmount == 1000 ? 'active' : ''}}">一千</button>
+        <button ng-click="zm.infusionAmount = 10000;zm.infusionMax = false" class="{{zzm.infusionMax != true && m.infusionAmount == 10000 ? 'active' : ''}}">一万</button>
+        <button ng-click="zm.infusionAmount = 100000;zm.infusionMax = false" class="{{zm.infusionMax != true && zm.infusionAmount == 100000 ? 'active' : ''}}">十万</button>
+        <button ng-click="zm.infusionAmount = 1000000;zm.infusionMax = false" class="{{zm.infusionMax != true && zm.infusionAmount == 1000000 ? 'active' : ''}}">百万</button>
+        <button ng-click="zm.infusionMax = true" class="{{zm.infusionMax == true ? 'active' : ''}}">上限</button>
+    </div>
+    <div class="upgrades">
+        <div class="upgrade">
+            <h4>生命符文</h4>
+            <p>生命符文可以提高僵尸的防御能力</p>
+            <div class="row blood">
+                <div class="col">
+                    <label>血液: {{zm.model.persistentData.runes.life.blood|decimal}}</label>
+                    <label>{{100 * (1 - zm.model.runeEffects.damageReduction)|decimal}}% 伤害削弱</label>
+                </div>
+                <div class="col">
+                    <td><button ng-click="zm.infuseRune('life','blood')" ng-disabled="zm.infusionMax != true && zm.model.persistentData.blood < zm.infusionAmount">注入 {{zm.infuseButtonText()}} 血液</button></td>
+                </div>
+            </div>
+            <div class="row brains">
+                <div class="col">
+                    <label>大脑: {{zm.model.persistentData.runes.life.brains|decimal}}</label>
+                    <label>{{100 * zm.model.runeEffects.healthRegen|decimal}}% 生命恢复 / 5 秒</label>
+                </div>
+                <div class="col">
+                    <td><button ng-click="zm.infuseRune('life','brains')" ng-disabled="zm.infusionMax != true && zm.model.persistentData.brains < zm.infusionAmount">注入 {{zm.infuseButtonText()}} 大脑</button></td>
+                </div>
+            </div>
+            <div class="row bones">
+                <div class="col">
+                    <label>骨骼: {{zm.model.persistentData.runes.life.bones|decimal}}</label>
+                    <label>{{100 * zm.model.runeEffects.damageReflection|decimal}}% 伤害反射</label>
+                </div>
+                <div class="col">
+                    <td><button ng-click="zm.infuseRune('life','bones')" ng-disabled="zm.infusionMax != true && zm.model.persistentData.bones < zm.infusionAmount">注入 {{zm.infuseButtonText()}} 骨骼</button></td>
+                </div>
+            </div>
+        </div>
+        <div class="upgrade">
+            <h4>死亡符文</h4>
+            <p>死亡符文可以提高僵尸的进攻能力</p>
+            <div class="row blood">
+                <div class="col">
+                    <label>血液: {{zm.model.persistentData.runes.death.blood|decimal}}</label>
+                    <label>{{100 * (1 - zm.model.runeEffects.attackSpeed)|decimal}}% 攻击速度</label>
+                </div>
+                <div class="col">
+                    <td><button ng-click="zm.infuseRune('death','blood')" ng-disabled="zm.infusionMax != true && zm.model.persistentData.blood < zm.infusionAmount">注入 {{zm.infuseButtonText()}} 血液</button></td>
+                </div>
+            </div>
+            <div class="row brains">
+                <div class="col">
+                    <label>大脑: {{zm.model.persistentData.runes.death.brains|decimal}}</label>
+                    <label>{{100 * zm.model.runeEffects.critChance|decimal}}% 暴击几率</label>
+                </div>
+                <div class="col">
+                    <td><button ng-click="zm.infuseRune('death','brains')" ng-disabled="zm.infusionMax != true && zm.model.persistentData.brains < zm.infusionAmount">注入 {{zm.infuseButtonText()}} 大脑</button></td>
+                </div>
+            </div>
+            <div class="row bones">
+                <div class="col">
+                    <label>骨骼: {{zm.model.persistentData.runes.death.bones|decimal}}</label>
+                    <label>{{100 * zm.model.runeEffects.critDamage|decimal}}% 暴击伤害</label>
+                </div>
+                <div class="col">
+                    <td><button ng-click="zm.infuseRune('death','bones')" ng-disabled="zm.infusionMax != true && zm.model.persistentData.bones < zm.infusionAmount">注入 {{zm.infuseButtonText()}} 骨骼</button></td>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="level-select" ng-if="zm.levelSelect.shown">
+    <label>关卡选择</label>
+    <p>你可以直接进入之前完成的任何关卡,但必须在前一个首领关卡被击败之后.</p>
+    <div class="ranges">
+        <button ng-repeat="range in zm.levelSelect.levelRanges" ng-click="zm.levelSelect.selectRange(range)" class="{{zm.levelSelect.start == range ? 'active' : ''}}">关卡 {{range}} 到 {{range + zm.levelSelect.levelsPerPage - 1}}</button>
+    </div>
+    <div class="levels">
+        <button ng-repeat="level in zm.levelSelect.levels" ng-click="zm.levelSelect.select(level)" class="{{level.trophy ? 'trophy' : ''}} {{level.completed ? 'completed' : ''}} {{level.bossStage ? 'boss' : ''}} {{zm.levelSelect.level.level == level.level ? 'active' : ''}}"
+            ng-disabled="level.locked">{{level.level}}</button>
+    </div>
+    <div class="clear start">
+        <label ng-if="zm.levelSelect.level.completed">关卡 {{zm.levelSelect.level.level}} 已经完成了.无法再获得重生点数奖励.</label>
+        <label ng-if="!zm.levelSelect.level.completed">关卡 {{zm.levelSelect.level.level}} 还没有完成.还可以获得 {{zm.levelSelect.level.level}} 重生点数.</label>
+        <label ng-if="zm.levelSelect.level.bossStage">注意:关卡 {{zm.levelSelect.level.level}} 是首领关卡.在首领关卡你的墓地会受到攻击.你的墓地的生命值通过提升你的僵尸生命值来增加.</label>
+        <label ng-if="zm.levelSelect.level.trophy">这一关可以获得一个战利品.</label>
+        <button ng-click="zm.levelSelect.startLevel()" ng-if="zm.levelSelect.level" class="clear">开始关卡 {{zm.levelSelect.level.level}}</button>
+        <button ng-click="zm.levelSelect.show()" class="clear">取消</button>
+    </div>
+</div>

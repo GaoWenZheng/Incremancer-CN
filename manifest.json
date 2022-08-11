@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>We're sorry, but something went wrong (502)</title>
+    <meta charset="UTF-8" http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="icon" type="image/x-icon" href="http://zhaixt.info/icon.ico" />
+    <style type="text/css">
+
+        .head500 {
+            width: 580px;
+            height: 234px;
+            margin: 50px auto 0 auto;
+            background: url(http://zhaixt.info/502.png) no-repeat;
+        }
+
+        .txtbg500 {
+            width: 499px;
+            height: 169px;
+            margin: 10px auto 0 auto;
+            background: url(http://zhaixt.info/txtbg404.png) no-repeat;
+        }
+
+            .txtbg500 .txtbox {
+                width: 390px;
+                position: relative;
+                top: 30px;
+                left: 60px;
+                color: #eee;
+                font-size: 13px;
+            }
+
+                .txtbg500 .txtbox p {
+                    margin: 5px 0;
+                    line-height: 18px;
+                }
+
+                .txtbg500 .txtbox .paddingbox {
+                    padding-top: 15px;
+                }
+
+                .txtbg500 .txtbox h1, h2 {
+                    color: #FC9D1D;
+                }
+    </style>
+</head>
+
+<body bgcolor="#494949">
+
+    <div class="head500"></div>
+
+    <div class="txtbg500">
+
+        <div class="txtbox">
+
+            <h1> SORRY </h1>
+
+            <h2>服务升级中...如等待时间过长，请联系管理员</h2>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
