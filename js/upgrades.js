@@ -1053,13 +1053,13 @@ Upgrades.prestigeUpgrades = [
     new Upgrades.Upgrade(103, "大脑存储", Upgrades.types.brainsStoragePC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "每个等阶额外增加 20% 大脑存储上限."),
     new Upgrades.Upgrade(104, "大脑增量", Upgrades.types.brainsGainPC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "每个等阶额外增加 20% 大脑收益."),
     new Upgrades.Upgrade(105, "骨骼增量", Upgrades.types.bonesGainPC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "每个等阶额外增加 20% 骨骼收益."),
-    new Upgrades.Upgrade(106, "僵尸伤害", Upgrades.types.zombieHealthPC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "Additional 20% zombie health for each rank"),
-    new Upgrades.Upgrade(107, "僵尸生命值", Upgrades.types.zombieDmgPC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "Additional 20% zombie damage for each rank"),
+    new Upgrades.Upgrade(106, "僵尸伤害", Upgrades.types.zombieHealthPC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "每个等阶额外增加 20% 僵尸伤害."),
+    new Upgrades.Upgrade(107, "僵尸生命值", Upgrades.types.zombieDmgPC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "每个等阶额外增加 20% 僵尸生命值."),
     new Upgrades.Upgrade(111, "部件增量", Upgrades.types.partsGainPC, Upgrades.costs.prestigePoints, 10, 1.25, 0.2, 0, "每个等阶额外增加 20% 生物部件收益."),
     new Upgrades.Upgrade(112, "自动建造", Upgrades.types.autoconstruction, Upgrades.costs.prestigePoints, 250, 1, 1, 1, "解锁自动开始建造最便宜的可用建筑的选项."),
     new Upgrades.Upgrade(114, "自动商店", Upgrades.types.autoshop, Upgrades.costs.prestigePoints, 250, 1, 1, 1, "解锁从商店自动购买物品."),
     new Upgrades.Upgrade(113, "墓地生命值", Upgrades.types.graveyardHealth, Upgrades.costs.prestigePoints, 10, 1.25, 0.1, 0, "在首领关卡中每个等阶提升墓地生命值 10%."),
-    new Upgrades.Upgrade(200, "作弊", -1000000, Upgrades.costs.prestigePoints, -1000000, 1, 0, 0, "作弊"),
+    //new Upgrades.Upgrade(200, "作弊", -1000000, Upgrades.costs.prestigePoints, -1000000, 1, 0, 0, "作弊"),
 ];
 
 Upgrades.upgrades = [
